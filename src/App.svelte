@@ -1,10 +1,16 @@
 <script>
 	import Board from './components/Board.svelte';
+	import Dictionary from './dictionary';
 
+	let wordLength = 5
 	export let rows = [0, 1, 2, 3, 4, 5];
 	export let columns = [0, 1, 2, 3, 4];
 
-	const currentWord = 'dobby';
+	const goodWords = Dictionary.filter((word) => {
+		return word.length === wordLength;
+	});
+
+	const currentWord = goodWords[Math.floor(Math.random() * goodWords.length)];
 	const createGrid = rows
     .map((row) => {
 			const fields = columns.map((column) => {
@@ -25,6 +31,8 @@
 	const createSettings = {
 		wordle: currentWord,
 	};
+
+	console.log('goodWords: ', goodWords);
 </script>
 
 <main>
@@ -54,6 +62,7 @@
 	}
 
 	:global(body) {
+		min-height: 100vh;
 		background: var(--secondary-dark);
 		color: var(--primary-lighter);
 	}

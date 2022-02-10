@@ -1,5 +1,9 @@
 <script>
+  import { fly, fade } from 'svelte/transition';
+	import { bounceInOut, elasticOut } from 'svelte/easing';
   import { onMount } from 'svelte';
+  let harold = './img/harold.png';
+  let sad = './img/sad.jpg';
   const alphabet = [...Array(26)].map((_, i) => String.fromCharCode(65 + i).toLowerCase());
 
   // props
@@ -7,6 +11,8 @@
   export let settings = {};
   export let grid = [];
   let guess = [];
+  let isWinner = false;
+  let isLoser = false;
 
   // handle each inputs
   const handleGuessLetter = (event, field, rowIndex, columnIndex) => {
@@ -123,17 +129,26 @@
   }
 
   const winGame = () => {
-    console.log('WINNNNEERRR!!!!!!');
+    isWinner = true;
   }
 
   const nextRow = () => {
     grid[currentStep].state = 'inactive';
     guess = [];
 
-    if (currentStep !== rowLength) {
+    const isLastStep = grid.length - 1 <= currentStep;
+
+    if (isLastStep && !isWinner) {
+      isLoser = true;
+      return;
+    }
+
+    if (currentStep !== rowLength - 1 && !isWinner) {
       currentStep++
       grid[currentStep].state = 'active';
       grid[currentStep].fields[0].ref.focus();
+
+      return;
     }
   }
 
@@ -165,16 +180,33 @@
     }
   }
 
+  function spin(node, { duration }) {
+		return {
+			duration,
+			css: t => {
+				const eased = elasticOut(t);
+
+				return `
+					transform: scale(${eased}) rotate(${eased * 1080}deg);
+					color: hsl(
+						${Math.trunc(t * 360)},
+						${Math.min(100, 1000 - 1000 * t)}%,
+						${Math.min(50, 500 - 500 * t)}%
+					);`
+			}
+		};
+	}
+
   onMount(() => {
     // active the first row and focus the first field
     grid[0].state = 'active';
 	});
   
-  console.log('grid:', grid);
+  // console.log('grid:', grid);
   console.log('settings:', settings);
 </script>
 
-<div class="c-Board">
+<div class="c-Board" data-winner={isWinner} data-loser={isLoser}>
   <div class="container">
     {#if grid.length > 0}
     <div class="c-Board__list">
@@ -222,7 +254,48 @@
   </div>
 </div>
 
+
+
+<div class="harold">
+  {#if isWinner}
+    {#key isWinner}
+        <img
+          src={harold} alt="harold"
+          transition:fly="{{y: 150, x: 300, delay: 250, duration: 2000, easing: bounceInOut, opacity: 1 }}"
+        />
+    {/key}
+  {/if}
+
+  {#if isLoser}
+    {#key isLoser}
+        <p in:spin="{{duration: 8000}}" out:fade>{settings.wordle}</p>
+
+        <img
+          src={sad} alt="sad"
+          transition:fly="{{y: 150, x: 300, delay: 250, duration: 2000, easing: bounceInOut, opacity: 1 }}"
+        />
+    {/key}
+  {/if}
+</div>
+
 <style>
+  .c-Board {
+    transform: scale(1);
+    transition: all ease-in .15s .3s;
+  }
+
+  .c-Board[data-winner="true"] {
+    pointer-events: none;
+    transform: scale(0.98) rotate(0);
+    opacity: 1;
+  }
+  
+  .c-Board[data-loser="true"] {
+    transition: all ease-in 1s .3s;
+    pointer-events: none;
+    opacity: 0;
+    transform: scale(0.5) rotate(960deg);
+  }
   .c-Board--submit__wrapper {
     display: flex;
     justify-content: center;
@@ -309,5 +382,32 @@
     color: var(--primary-lighter);
     text-align: center;
     text-transform: uppercase;
+  }
+
+  .harold {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    pointer-events: none;
+  }
+
+  .harold p {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+		transform: translate(-50%,-50%);
+		font-size: 4em;
+    margin: 0;
+  }
+
+  .harold img {
+    max-width: 300px;
+    width: 100%;
+    height: auto;
   }
 </style>
