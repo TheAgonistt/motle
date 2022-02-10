@@ -4,8 +4,7 @@
 	export let rows = [0, 1, 2, 3, 4, 5];
 	export let columns = [0, 1, 2, 3, 4];
 
-	// export let currentGuestIndex = 0;
-	export let currentWord = 'dobby';
+	const currentWord = 'dobby';
 	const createGrid = rows
     .map((row) => {
 			const fields = columns.map((column) => {
@@ -22,21 +21,26 @@
 				state: 'inactive',
 			};
 		})
-
+	
+	const createSettings = {
+		wordle: currentWord,
+	};
 </script>
 
 <main>
-	<header>
+	<header class="c-Header">
 		<div class="container">
-			<h2>Wordles</h2>
+			<div class="c-Header__row">
+				<h1>Wordles</h1>
+				<button class="material-icons">settings</button>
+			</div>
 		</div>
 	</header> 
 
 	<Board
 		wordle={currentWord.toLowerCase()}
-		rows={rows}
-		columns={columns}
 		grid={createGrid}
+		settings={createSettings}
 	/>
 </main>
 
@@ -51,6 +55,29 @@
 
 	:global(body) {
 		background: var(--secondary-dark);
+		color: var(--primary-lighter);
+	}
+
+	.c-Header {
+		padding-block: 25px;
+	}
+
+	.c-Header__row {
+		display: flex;
+		justify-content: space-between;
+	}
+
+	.c-Header__row h1 {
+		font-size: 1.5rem;
+		margin: 0;
+	}
+
+	.c-Header__row button {
+		padding: 0;
+		margin: 0;
+		border: none;
+		background: transparent;
+		font-size: 1.5rem;
 		color: var(--primary-lighter);
 	}
 </style>

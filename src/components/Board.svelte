@@ -3,14 +3,21 @@
   const alphabet = [...Array(26)].map((_, i) => String.fromCharCode(65 + i).toLowerCase());
 
   // props
-  export let wordle;
   export let currentStep = 0;
+  export let settings = {};
   export let grid = [];
   let guess = [];
 
   // handle each inputs
-  const handleGuessLetter = (event, rowIndex, columnIndex) => {
+  const handleGuessLetter = (event, field, rowIndex, columnIndex) => {
     const value = event.target.value;
+    const isValidLetter = alphabet.includes(value);
+
+    if (!isValidLetter) {
+      field.ref.value = '';
+      return false;
+    }
+
     guess[columnIndex] = value ? value.toLowerCase() : '?';
 
     // focus the next input
@@ -24,7 +31,6 @@
 
   // handle form submit
   const handleSubmit = () => {
-    console.log('--- handleSubmit ---');
     validateGuess();
   }
 
@@ -47,15 +53,13 @@
   }
 
   const validateGuess = () => {
-    console.log('--- validateGuess --- ');
-    console.log('guess: ', guess);
     
     if (isValidGuess()) {
       const validation = guess.map((letter, index) => {
-        const letterIsPresent = wordle.includes(letter);
+        const letterIsPresent = settings.wordle.includes(letter);
         let letterIndexMatch = false;
         if (letterIsPresent) {
-          const wordleLetter = wordle[index];
+          const wordleLetter = settings.wordle[index];
           letterIndexMatch = wordleLetter === letter;
         }
 
@@ -167,6 +171,7 @@
 	});
   
   console.log('grid:', grid);
+  console.log('settings:', settings);
 </script>
 
 <div class="c-Board">
@@ -188,7 +193,7 @@
                   type="text" 
                   maxlength="1"
                   on:input="{(event) => {
-                    handleGuessLetter(event, rowIndex, columnIndex)
+                    handleGuessLetter(event, field, rowIndex, columnIndex)
                   }}"
                   bind:this={field['ref']}
                 >
@@ -274,7 +279,8 @@
     position: relative;
     padding-top: 100%;
     width: 100%;
-    border: 2px solid var(--secondary);
+    border: 0;
+    outline: 2px solid var(--secondary);
   }
 
   .c-Board__item.is-egzakt {
@@ -286,7 +292,7 @@
   }
 
   .c-Board__item.is-invalid {
-    background: #d32f2f;
+    background: var(--secondary);
   }
 
   .c-Board__item input {
