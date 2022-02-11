@@ -62,6 +62,7 @@
     
     if (isValidGuess()) {
       const validation = guess.map((letter, index) => {
+        const letterLowerCase = letter.toLowerCase();
         const letterIsPresent = settings.wordle.includes(letter);
         let letterIndexMatch = false;
         if (letterIsPresent) {
@@ -299,14 +300,14 @@
   .c-Board--submit__wrapper {
     display: flex;
     justify-content: center;
-    padding-block: 40px;
+    padding-block: 20px;
   }
 
   .c-Board--submit {
     margin: 0;
-    padding: 0.8em 2em;
+    padding: 0.5em 1.4em;
     background: transparent;
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: bold;
     color: var(--primary-lighter);
     border: 2px solid var(--primary-lighter);
@@ -318,6 +319,11 @@
   .c-Board--submit[disabled] {
     cursor: not-allowed;
     opacity: 0.5;
+  }
+
+  .c-Board__list {
+    margin-inline: auto;
+    max-width: 250px;
   }
 
 	.c-Board__list--row {
