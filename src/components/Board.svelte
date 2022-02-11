@@ -13,6 +13,7 @@
   let guess = [];
   let isWinner = false;
   let isLoser = false;
+  let error = false;
 
   // handle each inputs
   const handleGuessLetter = (event, field, rowIndex, columnIndex) => {
@@ -51,17 +52,28 @@
   }
 
   const isValidGuess = () => {
+
+    // check if all the fields have a value
     const hasEmptyLetter = guess.some((letter) => letter === '?');
     if ((guess.length < wordLength - 1) || hasEmptyLetter) {
-      return false;
+      return {error: 'Please  fill in all the input'};
+    }
+
+    // check if the guessed word is a valid word
+    const guessedWord =  guess.join('');
+    const isValidWord = settings.validWords.some((validWord) => guessedWord === validWord.toLowerCase());
+
+    if (!isValidWord) {
+      return {error: 'Not a valid word'};
     }
 
     return true;
   }
 
   const validateGuess = () => {
-    
-    if (isValidGuess()) {
+    const validation = isValidGuess();
+    const validationType = typeof validation;
+    if (validationType === 'boolean') {
       const validation = guess.map((letter, index) => {
         const letterLowerCase = letter.toLowerCase();
         const letterIsPresent = settings.wordle.includes(letterLowerCase);
@@ -92,6 +104,21 @@
       updateRow(validation);
       nextRow();
     }
+
+    if (validationType === 'object') {
+      triggerError(validation.error);
+    }
+  }
+
+  const triggerError = (newError) => {
+    error = newError;
+
+    const timeOut = () => setTimeout(() => {
+      error = '';
+    }, 4000);
+
+    timeOut();
+    clearTimeout(timeOut);
   }
 
   const updateRow = (validation) => {
@@ -208,6 +235,16 @@
   console.log('settings:', settings);
 </script>
 
+{#if error !== '' && error}
+  <div class="c-Error">
+  {#key error}
+    <div class="c-Error__content" transition:fade="{{delay: 100, duration: 300}}">
+      <p>{error}</p>
+    </div>
+  {/key}
+  </div>
+{/if}
+
 <div class="c-Board" data-winner={isWinner} data-loser={isLoser}>
   <div class="container">
     {#if grid.length > 0}
@@ -281,6 +318,26 @@
 </div>
 
 <style>
+  .c-Error {
+    position: absolute;
+    top: 19px;
+    left: 50%;
+    transform: translate3d(-50%, 0, 0);
+    z-index: 100;
+  }
+
+  .c-Error__content {
+    padding: 6px 16px;
+    background: #db2232;
+    border-radius: 4px;
+  }
+
+  .c-Error__content p {
+    margin: 0;
+    color: var(--primary-lighter);
+    white-space: nowrap;
+  }
+
   .c-Board {
     transform: scale(1);
     transition: all ease-in .15s .3s;

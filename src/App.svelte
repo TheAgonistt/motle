@@ -6,11 +6,11 @@
 	export let rows = [0, 1, 2, 3, 4, 5];
 	export let columns = [0, 1, 2, 3, 4];
 
-	const goodWords = Dictionary.filter((word) => {
+	const validWords = Dictionary.filter((word) => {
 		return word.length === wordLength;
 	});
 
-	const currentWord = goodWords[Math.floor(Math.random() * goodWords.length)];
+	const currentWord = validWords[Math.floor(Math.random() * validWords.length)];
 	const createGrid = rows
     .map((row) => {
 			const fields = columns.map((column) => {
@@ -30,9 +30,10 @@
 	
 	const createSettings = {
 		wordle: currentWord,
+		validWords: validWords,
 	};
 
-	console.log('goodWords: ', goodWords);
+	console.log('validWords: ', validWords);
 </script>
 
 <main>
