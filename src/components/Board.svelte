@@ -63,7 +63,7 @@
     if (isValidGuess()) {
       const validation = guess.map((letter, index) => {
         const letterLowerCase = letter.toLowerCase();
-        const letterIsPresent = settings.wordle.includes(letter);
+        const letterIsPresent = settings.wordle.includes(letterLowerCase);
         let letterIndexMatch = false;
         if (letterIsPresent) {
           const wordleLetter = settings.wordle[index];
