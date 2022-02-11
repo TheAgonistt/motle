@@ -16,8 +16,8 @@
 
   // handle each inputs
   const handleGuessLetter = (event, field, rowIndex, columnIndex) => {
-    const valueToLowerCase = value.toLowerCase();
     const value = event.target.value;
+    const valueToLowerCase = value.toLowerCase();
     const isValidLetter = alphabet.includes(valueToLowerCase);
 
     if (!isValidLetter) {
