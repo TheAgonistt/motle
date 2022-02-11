@@ -20,6 +20,17 @@
     const value = event.target.value;
     const valueToLowerCase = value.toLowerCase();
     const isValidLetter = alphabet.includes(valueToLowerCase);
+    const previousValue = guess[columnIndex];
+
+    if (alphabet.includes(previousValue?.toLowerCase()) && !isValidLetter) {
+      const hasPreviousInput = grid[rowIndex]['fields'][columnIndex - 1];
+
+      if (hasPreviousInput) {
+        grid[rowIndex]['fields'][columnIndex - 1].ref.focus();
+      }
+
+      return false
+    }
 
     if (!isValidLetter) {
       field.ref.value = '';
@@ -139,9 +150,7 @@
       return item.status === 'invalid';
     });
 
-    if (allWrong) {
-      console.log('!!!!!!!!!!! allWrong !!!!!!!!!!!!!');
-    }
+    if (allWrong) {}
 
     // all other cases (mix of egzaktm partial and invalid)
 
@@ -230,9 +239,6 @@
     // active the first row and focus the first field
     grid[0].state = 'active';
 	});
-  
-  // console.log('grid:', grid);
-  console.log('settings:', settings);
 </script>
 
 {#if error !== '' && error}
@@ -442,6 +448,7 @@
     padding: 0;
     background: transparent;
     border: 0;
+    outline: 0!important;
     font-size: 2rem;
     color: var(--primary-lighter);
     text-align: center;

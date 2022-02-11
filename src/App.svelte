@@ -40,7 +40,7 @@
 	<header class="c-Header">
 		<div class="container">
 			<div class="c-Header__row">
-				<h1>Wordles</h1>
+				<h1>NiceLogoAndName</h1>
 				<button class="material-icons">settings</button>
 			</div>
 		</div>
