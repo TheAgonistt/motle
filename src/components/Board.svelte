@@ -16,15 +16,16 @@
 
   // handle each inputs
   const handleGuessLetter = (event, field, rowIndex, columnIndex) => {
+    const valueToLowerCase = value.toLowerCase();
     const value = event.target.value;
-    const isValidLetter = alphabet.includes(value);
+    const isValidLetter = alphabet.includes(valueToLowerCase);
 
     if (!isValidLetter) {
       field.ref.value = '';
       return false;
     }
 
-    guess[columnIndex] = value ? value.toLowerCase() : '?';
+    guess[columnIndex] = valueToLowerCase ? value.toLowerCase() : '?';
 
     // focus the next input
     const isLastInput = columnIndex === wordLength - 1;
@@ -244,14 +245,14 @@
     </div>
     {/if}
 
-    <div class="c-Board--submit__wrapper">
+    <!-- <div class="c-Board--submit__wrapper">
       <button
         class="c-Board--submit"
         disabled={guess.length < 5}
         type="submit"
         on:click={handleGlobalSubmit}
       >Guess</button>
-    </div>
+    </div> -->
   </div>
 </div>
 

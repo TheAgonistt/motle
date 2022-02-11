@@ -68,7 +68,7 @@
 	}
 
 	.c-Header {
-		padding-block: 25px;
+		padding-block: 20px;
 	}
 
 	.c-Header__row {
@@ -77,7 +77,7 @@
 	}
 
 	.c-Header__row h1 {
-		font-size: 1.5rem;
+		font-size: 1.3rem;
 		margin: 0;
 	}
 
@@ -86,7 +86,7 @@
 		margin: 0;
 		border: none;
 		background: transparent;
-		font-size: 1.5rem;
+		font-size: 1.3rem;
 		color: var(--primary-lighter);
 	}
 </style>
